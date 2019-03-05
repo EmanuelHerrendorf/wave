@@ -32,6 +32,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     user: Observable<User>;
     invalidCredentials$ = new BehaviorSubject<boolean>(false);
+    jwtClientToken: string;
 
     constructor(private formBuilder: FormBuilder,
                 private config: Config,
@@ -66,6 +67,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
             });
 
         this.user = this.userService.getUserStream();
+        this.userService.getJwtClientToken().subscribe(r => {
+            this.jwtClientToken = r.clientToken;
+        })
     }
 
     ngAfterViewInit() {
@@ -128,4 +132,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
                 error => this.notificationService.error(`The backend is currently unavailable (${error})`));
     }
 
+    get jwtLoginUrl(): string {
+        const jwtUrl = 'http://vhrz669.hrz.uni-marburg.de/nature40/sso?jws=';
+        const jwtUrlWithClienToken = jwtUrl + this.jwtClientToken;
+        return jwtUrlWithClienToken;
+    }
 }

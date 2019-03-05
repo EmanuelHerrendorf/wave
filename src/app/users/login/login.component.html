@@ -17,6 +17,12 @@
             Login
         </button>
     </form>
+
+    <div>
+        <span>Login with:</span>
+        <a mat-raised-button href="{{jwtLoginUrl}}">LOEWE natur 4.0</a>
+    </div>
+
 </ng-template>
 <ng-template [ngIf]="isLoading$ | async">
     <mat-spinner></mat-spinner>

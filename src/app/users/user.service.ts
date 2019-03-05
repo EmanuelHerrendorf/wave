@@ -523,6 +523,62 @@ export class UserService {
     }
 
     /**
+     * Login using a jwt token. If it was successful, set a new user.
+     * @param token The user's token.
+     * @returns `true` if the login was succesful, `false` otherwise.
+     */
+    jwtTokenLogin(token: string): Observable<boolean> {
+        const parameters = new MappingRequestParameters({
+            service: 'jwt',
+            sessionToken: undefined,
+            request: 'login',
+            parameters: {token: token},
+        });
+
+        console.log(parameters);
+
+        const subject = new Subject<boolean>();
+
+        this.request<{ result: string | boolean, session: string }>(parameters).pipe(
+            mergeMap(response => {
+                const success = typeof response.result === 'boolean' && response.result === true;
+
+                if (success) {
+                    return this.getUserDetails({user: undefined, sessionToken: response.session}).pipe(
+                        tap(user => {
+                            this.session$.next({
+                                user: user.name,
+                                sessionToken: response.session,
+                                staySignedIn: false,
+                                isExternallyConnected: true,
+                            });
+                        }),
+                        map(user => true), );
+                } else {
+                    return observableOf(false);
+                }
+            }))
+            .subscribe(
+                success => subject.next(success),
+                () => subject.next(false),
+                () => subject.complete()
+            );
+
+        return subject;
+    }
+
+    getJwtClientToken(): Observable<{clientToken: string}> {
+        const parameters = new MappingRequestParameters({
+            service: 'jwt',
+            sessionToken: undefined,
+            request: 'clientToken',
+            parameters: {},
+        });
+
+        return this.request<{ result: string | boolean, clientToken: string }>(parameters)
+    }
+
+    /**
      * Get the session data.
      * @returns the session data
      */

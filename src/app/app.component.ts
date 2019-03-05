@@ -166,7 +166,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         } else {
 
             // handle query parameters directly if it is not embedded and using an auto login
-            this.handleWorkflowParameters();
+            this.handleQueryParameters();
 
         }
     }
@@ -186,7 +186,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                         filter(status => status === StorageStatus.OK),
                         first()
                     ).subscribe(() => {
-                        this.handleWorkflowParameters();
+                        this.handleQueryParameters();
                     });
                 });
                 break;
@@ -200,7 +200,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.windowHeight$.next(window.innerHeight);
     }
 
-    private handleWorkflowParameters() {
+    private handleQueryParameters() {
         this.activatedRoute.queryParams.subscribe(p => {
             for (const parameter of Object.keys(p)) {
                 const value = p[parameter];
@@ -244,6 +244,16 @@ export class AppComponent implements OnInit, AfterViewInit {
                             });
                         } catch (error) {
                             this.notificationService.error(`Invalid Workflow: »${error}«`);
+                        }
+                        break;
+                    case 'jws':
+                    case 'jwt':
+                        try {
+                            const tokenString: string = value;
+                            console.log('JWS/JWT' + tokenString);
+                            this.userService.jwtTokenLogin(tokenString);
+                        } catch (error) {
+                            this.notificationService.error(`Cant handle provided JWT/JWS parameters: »${error}«`);
                         }
                         break;
                     default:
