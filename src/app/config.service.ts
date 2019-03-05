@@ -59,6 +59,10 @@ interface GfbioInterface {
     LIFERAY_PORTAL_URL: string;
 }
 
+interface Natur40Interface {
+    SSO_JWT_PROVIDER_URL: string;
+}
+
 interface TimeInterface {
     ALLOW_RANGES: boolean;
 }
@@ -76,6 +80,7 @@ interface ConfigInterface {
     DEFAULTS: DefaultsInterface;
     MAP: MapInterface;
     GFBIO: GfbioInterface;
+    NATUR40: Natur40Interface;
     TIME: TimeInterface;
 }
 
@@ -136,6 +141,9 @@ const ConfigDefault = Immutable.fromJS({
     GFBIO: {
         LIFERAY_PORTAL_URL: 'https://dev.gfbio.org/',
     },
+    NATUR40: {
+        SSO_JWT_PROVIDER_URL: 'http://vhrz669.hrz.uni-marburg.de/nature40/sso?jws=',
+    },
     TIME: {
         ALLOW_RANGES: true,
     },
@@ -185,6 +193,7 @@ export class Config {
     private _MAP: MapInterface;
     private _GFBIO: GfbioInterface;
     private _TIME: TimeInterface;
+    private _NATUR40: Natur40Interface;
 
 
     get MAPPING_URL(): MappingUrlType {
@@ -229,6 +238,10 @@ export class Config {
 
     get GFBIO(): GfbioInterface {
         return this._GFBIO;
+    }
+
+    get Natur40(): Natur40Interface {
+        return this._NATUR40;
     }
 
     get TIME(): TimeInterface {
@@ -295,6 +308,9 @@ export class Config {
                         break;
                     case 'GFBIO':
                         this._GFBIO = value;
+                        break;
+                    case 'NATUR40':
+                        this._NATUR40 = value;
                         break;
                     case 'TIME':
                         this._TIME = value;

@@ -140,7 +140,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     }
 
     get jwtLoginUrl(): string {
-        const jwtUrl = 'http://vhrz669.hrz.uni-marburg.de/nature40/sso?jws=';
+        const jwtUrl = this.config.Natur40.SSO_JWT_PROVIDER_URL;
         const jwtUrlWithClienToken = jwtUrl + this.jwtClientToken;
         return jwtUrlWithClienToken;
     }
