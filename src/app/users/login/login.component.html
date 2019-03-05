@@ -18,9 +18,16 @@
         </button>
     </form>
 
-    <div>
-        <span>Login with:</span>
-        <a mat-raised-button href="{{jwtLoginUrl}}">LOEWE natur 4.0</a>
+    <div class="sso_divider" fxLayout="row" fxLayoutAlign="center center">
+        <mat-divider fxFlex="auto"></mat-divider>
+        <div class="sso_divider_label">or</div>
+        <mat-divider fxFlex="auto"></mat-divider>
+    </div>
+
+    <div class="container" fxLayout="column">
+        <div>
+            <a mat-raised-button href="{{jwtLoginUrl}}"><mat-icon svgIcon="login:natur_40_logo"></mat-icon>Continue with LOEWE Natur 4.0</a>
+        </div>
     </div>
 
 </ng-template>

@@ -48,7 +48,22 @@ button {
     width: 100%;
 }
 
+a {
+    margin-top: 1rem;
+    width: 100%;
+}
+
 .label {
     color: mat-color(map-get($wave-app-theme, foreground), secondary-text);
     margin-right: 1rem;
+}
+
+.sso_divider {
+    color: mat-color(map-get($wave-app-theme, foreground), secondary-text);
+    margin: 1rem;
+}
+
+.sso_divider_label {
+    padding-left: 1rem;
+    padding-right: 1rem;
 }

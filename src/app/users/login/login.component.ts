@@ -8,6 +8,8 @@ import {WaveValidators} from '../../util/form.validators';
 import {UserService} from '../user.service';
 import {User} from '../user.model';
 import {NotificationService} from '../../notification.service';
+import {MatIconRegistry} from '@angular/material';
+import {DomSanitizer} from '@angular/platform-browser';
 
 enum FormStatus {
     LoggedOut,
@@ -37,7 +39,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
     constructor(private formBuilder: FormBuilder,
                 private config: Config,
                 private userService: UserService,
-                private notificationService: NotificationService) {
+                private notificationService: NotificationService,
+                private iconRegistry: MatIconRegistry,
+                private sanitizer: DomSanitizer) {
+        this.iconRegistry.addSvgIconInNamespace('login', 'natur_40_logo',
+            sanitizer.bypassSecurityTrustResourceUrl('assets/icons/natur_40_logo.svg'));
+
         this.loginForm = this.formBuilder.group({
             loginAuthority: ['gfbio', Validators.required],
             username: ['', Validators.compose([
