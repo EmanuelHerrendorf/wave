@@ -656,6 +656,7 @@ export class UserService {
                                     return {
                                         id: index,
                                         name: channel.name || 'Channel #' + index,
+                                        channel: channel.channel,
                                         datatype: channel.datatype,
                                         nodata: channel.nodata,
                                         unit: channelUnit,
@@ -673,6 +674,7 @@ export class UserService {
                                             } as MappingTransform,
                                         coords: coords,
                                         provenance: provenance,
+                                        file_name: channel.file_name || source.file_name || undefined,
                                     } as MappingSourceRasterLayer;
                                 });
 

@@ -13,7 +13,7 @@ import {
 import {Operator} from '../../../operator.model';
 import {ProjectService} from '../../../../project/project.service';
 import {DataSource} from '@angular/cdk/table';
-import {GdalSourceType} from '../../../types/gdal-source-type.model';
+import {GdalParams, GdalSourceType} from '../../../types/gdal-source-type.model';
 import {ExpressionType} from '../../../types/expression-type.model';
 import {ColorBreakpointDict} from '../../../../colors/color-breakpoint.model';
 import {ColorizerData, IColorizerData} from '../../../../colors/colorizer-data.model';
@@ -97,6 +97,8 @@ export class SourceDatasetComponent implements OnInit {
         let operator;
         if (this.dataset.operator === GdalSourceType.TYPE) {
             operator = this.createGdalSourceOperator(channel, doTransform);
+        } else if (this.dataset.operator === GdalSourceType.TYPE_EXT) {
+            operator = this.createGdalSourceOperator(channel, doTransform, true);
         } else {
             operator = this.createMappingRasterDbSourceOperator(channel, doTransform);
         }
@@ -160,7 +162,7 @@ export class SourceDatasetComponent implements OnInit {
      * @param {boolean} doTransform
      * @returns {Operator}
      */
-    createGdalSourceOperator(channel: MappingSourceRasterLayer, doTransform: boolean): Operator {
+    createGdalSourceOperator(channel: MappingSourceRasterLayer, doTransform: boolean, use_gdal_params: boolean = false): Operator {
         const sourceDataType = channel.datatype;
         const sourceUnit: Unit = channel.unit;
         let sourceProjection: Projection;
@@ -170,10 +172,24 @@ export class SourceDatasetComponent implements OnInit {
             throw new Error('No projection or EPSG code defined in [' + this.dataset.name + ']. channel.id: ' + channel.id);
         }
 
+        let gdalParams: GdalParams = undefined;
+        if (use_gdal_params) {
+            gdalParams = {channels: []};
+            gdalParams.channels[channel.id] = {
+                unit: channel.unit,
+                coords: channel.coords,
+                datatype: channel.datatype,
+                nodata: channel.nodata,
+                file_name: channel.file_name,
+                channel: channel.channel
+            };
+        }
+
         const operatorType = new GdalSourceType({
             channel: channel.id,
             sourcename: this.dataset.source,
             transform: doTransform, // TODO: user selectable transform?
+            gdal_params: gdalParams,
         });
 
         const sourceOperator = new Operator({

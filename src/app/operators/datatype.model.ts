@@ -106,22 +106,22 @@ class DataTypeCollection {
     }
 
     fromCode(code: string) {
-        switch (code) {
-            case this.Byte.getCode():
+        switch (code.toLowerCase()) {
+            case this.Byte.getCode().toLowerCase():
                 return this.Byte;
-            case this.Int16.getCode():
+            case this.Int16.getCode().toLowerCase():
                 return this.Int16;
-            case this.UInt16.getCode():
+            case this.UInt16.getCode().toLowerCase():
                 return this.UInt16;
-            case this.Int32.getCode():
+            case this.Int32.getCode().toLowerCase():
                 return this.Int32;
-            case this.UInt32.getCode():
+            case this.UInt32.getCode().toLowerCase():
                 return this.UInt32;
-            case this.Float32.getCode():
+            case this.Float32.getCode().toLowerCase():
                 return this.Float32;
-            case this.Float64.getCode():
+            case this.Float64.getCode().toLowerCase():
                 return this.Float64;
-            case this.Alphanumeric.getCode():
+            case this.Alphanumeric.getCode().toLowerCase():
                 return this.Alphanumeric;
             default:
                 throw new Error('Invalid Data Type');

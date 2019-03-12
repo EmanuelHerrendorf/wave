@@ -9,6 +9,13 @@ export interface MappingTransform {
   unit: Unit;
 }
 
+export interface Coords {
+    crs: string,
+    origin: number[],
+    scale: number[],
+    size: number[],
+}
+
 export interface ProvenanceInfo {
     uri: string;
     license: string;
@@ -26,13 +33,10 @@ export interface MappingSourceRasterLayer {
     hasTransform: boolean;
     isSwitchable: boolean;
     missingUnit?: boolean;
-    coords: {
-        crs: string,
-        origin: number[],
-        scale: number[],
-        size: number[],
-    };
+    coords: Coords;
     provenance: ProvenanceInfo;
+    file_name?: string;
+    channel?: number;
 }
 
 export interface MappingSourceVectorLayer {
@@ -60,67 +64,69 @@ export interface MappingSource {
     provenance: ProvenanceInfo;
 }
 
+// MAPPING DICTS
+
+export interface MappingCoordsDict {
+    crs: string;
+    epsg?: number;
+    origin?: number[];
+    scale?: number[];
+    size?: number[];
+}
+
+interface MappingProvenanceDict {
+    uri: string;
+    license: string;
+    citation: string;
+}
+
+interface MappingTransformDict {
+    unit?: UnitMappingDict,
+    datatype: string,
+    scale: number,
+    offset: number,
+}
+
+export interface MappingChannelDict {
+    datatype: string,
+    nodata: number,
+    name?: string,
+    channel?: number,
+    file_name?: string,
+    unit?: UnitMappingDict,
+    colorizer?: MappingRasterColorizerDict,
+    transform?: MappingTransformDict,
+    coords: MappingCoordsDict,
+    provenance?: MappingProvenanceDict,
+}
+
+interface MappingLayerDict {
+    id?: number | string,
+    name: string,
+    title?: string,
+    geometry_type: string, // FIXME: this must be the layer type -> POINT, POLYGON, LINE...
+    textual?: string[],
+    numeric?: string[],
+    coords: { // TODO: merge with MappingCoordsDict?
+        crs: string,
+    };
+    // uri?: string,
+    // license?: string,
+    // citation?: string,
+    provenance?: MappingProvenanceDict
+}
+
 export interface MappingSourceDict {
     operator?: string,
     name: string,
+    file_name?: string;
     descriptionText?: string,
     imgUrl?: string,
     colorizer?: MappingRasterColorizerDict,
-    provenance?: {
-        uri: string,
-        license: string,
-        citation: string,
-    };
-    coords: {
-        crs: string,
-        epsg?: number,
-        origin?: number[],
-        scale?: number[],
-        size?: number[],
-    };
-    channels?: [{
-        datatype: string,
-        nodata: number,
-        name?: string,
-        unit?: UnitMappingDict,
-        colorizer?: MappingRasterColorizerDict,
-        transform?: {
-            unit?: UnitMappingDict,
-            datatype: string,
-            scale: number,
-            offset: number,
-        },
-        coords: {
-            crs: string,
-            origin: number[],
-            scale: number[],
-            size: number[],
-        },
-        provenance?: {
-            uri: string,
-            license: string,
-            citation: string,
-        }
-    }];
-    layer?: [{
-        id?: number | string,
-        name: string,
-        title?: string,
-        geometry_type: string, // FIXME: this must be the layer type -> POINT, POLYGON, LINE...
-        textual?: string[],
-        numeric?: string[],
-        coords: {
-            crs: string,
-        };
-        uri?: string,
-        license?: string,
-        citation?: string,
-        provenance?: {
-            uri: string,
-            license: string,
-            citation: string,
-        }
-    }];
+    provenance?: MappingProvenanceDict;
+    coords: MappingCoordsDict,
+    channels?: MappingChannelDict[];
+    layer?: MappingLayerDict[];
 }
 
 export interface MappingSourceResponse {
